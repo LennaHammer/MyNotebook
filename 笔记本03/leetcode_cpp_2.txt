@@ -1,0 +1,222 @@
+﻿# LeetCode 笔记 第二部分
+
+从 257 题开始
+
+
+## 解答
+
+### 257. Binary Tree Paths
+
++ 二叉树，深度优先搜索
+
+```
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> ans;
+        vector<int> path;
+        function<void(TreeNode*)> f = [&](TreeNode* node){
+             if(!node)
+                return;
+             if(!node->left && !node->right){
+                 stringstream s;
+                 for(auto x: path)
+                    s<< x << "->";
+                 s << node->val;
+                 ans.push_back(s.str());
+                 return;
+             }
+             path.push_back(node->val);
+             f(node->left);
+             f(node->right);
+             path.pop_back();
+        };
+        if(root)
+            f(root);
+        return ans;
+    }
+};
+```
+
+### 268. Missing Number
+
++ 数组
++ 等差数列求和
+
+```c
+int missingNumber(int* nums, int numsSize) {
+    int y = numsSize;
+    for(int i=0; i<numsSize; i++)
+        y += i-nums[i];
+    return y;
+}
+```
+
+### 283. Move Zeroes
+
+```c
+void moveZeroes(int* nums, int numsSize) {
+    int s = 0;
+    for(int i=0;i<numsSize;i++)
+        if(nums[i]!=0)
+            nums[s++] = nums[i]; 
+    for(int i=s; i<numsSize; i++)
+        nums[i] = 0;
+}
+```
+
+
+### 344. Reverse String
+
+```c++
+class Solution {
+public:
+    string reverseString(string s) {
+        int i=0, j = s.size()-1;
+        while(i<j){
+            swap(s[i],s[j]);
+            i++, j--;
+        }
+        return s;
+    }
+};
+```
+
+### 349. Intersection of Two Arrays
+
++ 数组去重
+
+```c++
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> nums3;
+        unordered_map<int,int> h;
+        for(int x: nums1)
+            h[x] = 1;
+        for(int x: nums2)
+            h[x] |= 2;
+        for(auto p: h)
+            if(p.second==3)
+                nums3.push_back(p.first);
+        return nums3;
+    }
+};
+```
+
+### 404. Sum of Left Leaves
+
++ 二叉树
+```c++
+class Solution {
+    int f(TreeNode* node,bool isLeft){
+        if(node==NULL)
+            return 0;
+        if(node->left==NULL && node->right==NULL)
+            return isLeft ? node->val : 0;
+        return f(node->left, true)+f(node->right, false);
+    }
+public:
+    int sumOfLeftLeaves(TreeNode* root) {
+        return f(root, false);
+    }
+};
+```
+
+### 412. Fizz Buzz
+
+```c
+/**
+ * Return an array of size *returnSize.
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+char** fizzBuzz(int n, int* returnSize) {
+    char **xs = (char**)malloc(sizeof(char*)*n);
+    for(int i=0;i<n;i++){
+        int x = i + 1;
+        if(x%3==0){
+            if(x%5==0){
+                xs[i] = "FizzBuzz";
+            }else{
+                xs[i] = "Fizz";
+            }
+        }else if(x%5==0){
+            xs[i] = "Buzz";
+        }else{
+            char *s = (char*)malloc(sizeof(char)*10);
+            sprintf(s,"%d",x);
+            xs[i] = s;
+        }
+    }
+    *returnSize = n;
+    return xs;
+}
+```
+
+```c++
+class Solution {
+public:
+    vector<string> fizzBuzz(int n) {
+        vector<string> xs;
+        char *s = (char*)malloc(sizeof(char)*10);
+        for(int i=0;i<n;i++){
+            int x = i + 1;
+            if(x%3==0){
+                if(x%5==0){
+                    xs.push_back("FizzBuzz");
+                }else{
+                    xs.push_back("Fizz");
+                }
+            }else if(x%5==0){
+                xs.push_back("Buzz");
+            }else{
+                sprintf(s,"%d",x);
+                xs.push_back(s);
+            }
+        }
+        return xs;
+    }
+};
+```
+
+### 434. Number of Segments in a String
+
++ 字符串，数组
++ 状态机
+
+```c
+int countSegments(char* s) {
+    int count = 0;
+    bool word = false;
+    for(;;){
+        if(isspace(*s) || *s=='\0'){
+            if(word){
+                count++;
+                word = false;
+            }
+            if(!*s)
+                return count;
+        }else{
+            if(!word)
+                word = true;
+        }
+        s++;
+    }
+}
+```
+
+
+
+##
+
++ http://blog.csdn.net/zjucor
+http://bookshadow.com/
