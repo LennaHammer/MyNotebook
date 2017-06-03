@@ -8337,6 +8337,36 @@ def postorder_traversal(root)
 end
 ```
 
+### 146. LRU Cache
+
++ 正好 Ruby 的 Hash 中的元素保持插入顺序
+
+```ruby
+class LRUCache
+
+    def initialize(capacity)
+        @capacity = capacity
+        @hash = {}
+    end
+
+    def get(key)
+        value = @hash.delete(key)
+        if value
+            @hash[key] = value
+        else
+            -1
+        end
+    end
+
+    def put(key, value)
+        @hash.delete(key)
+        @hash.shift if @hash.size==@capacity
+        @hash[key] = value
+    end
+
+end
+```
+
 ### 208. Implement Trie (Prefix Tree)
 
 ```
